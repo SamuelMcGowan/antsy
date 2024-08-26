@@ -1,14 +1,82 @@
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Style {
     pub fg: Color,
     pub bg: Color,
     pub attributes: Attributes,
 }
 
+impl Style {
+    #[inline]
+    pub const fn new() -> Self {
+        Self {
+            fg: Color::Default,
+            bg: Color::Default,
+            attributes: Attributes::EMPTY,
+        }
+    }
+
+    #[inline]
+    pub const fn fg(self, color: Color) -> Self {
+        Self { fg: color, ..self }
+    }
+
+    #[inline]
+    pub const fn bg(self, color: Color) -> Self {
+        Self { bg: color, ..self }
+    }
+
+    #[inline]
+    pub const fn attributes(self, attributes: Attributes) -> Self {
+        Self {
+            attributes: self.attributes.or(attributes),
+            ..self
+        }
+    }
+
+    #[inline]
+    pub const fn bold(self) -> Self {
+        self.attributes(Attributes::BOLD)
+    }
+
+    #[inline]
+    pub const fn dim(self) -> Self {
+        self.attributes(Attributes::DIM)
+    }
+
+    #[inline]
+    pub const fn italic(self) -> Self {
+        self.attributes(Attributes::ITALIC)
+    }
+
+    #[inline]
+    pub const fn underlined(self) -> Self {
+        self.attributes(Attributes::UNDERLINED)
+    }
+
+    #[inline]
+    pub const fn blinking(self) -> Self {
+        self.attributes(Attributes::BLINKING)
+    }
+
+    #[inline]
+    pub const fn inverse(self) -> Self {
+        self.attributes(Attributes::INVERSE)
+    }
+
+    #[inline]
+    pub const fn hidden(self) -> Self {
+        self.attributes(Attributes::HIDDEN)
+    }
+}
+
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Color {
     Rgb(u8, u8, u8),
     Indexed(u8),
 
+    #[default]
     Default,
+
     Black,
     Red,
     Green,
