@@ -1,4 +1,7 @@
+pub mod color_choice;
 pub mod style;
+
+mod display;
 
 mod macros {
     // Imported for doc-comment.
