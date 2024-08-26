@@ -1,6 +1,8 @@
 pub mod color_choice;
 pub mod style;
 
+pub use style::Color;
+
 mod display;
 
 mod macros {
