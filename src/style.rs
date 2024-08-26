@@ -1,3 +1,60 @@
+macro_rules! impl_style_builder_methods {
+    ($self:ident => $style:expr) => {
+        #[inline]
+        pub const fn fg(mut $self: Self, color: Color) -> Self {
+            $style.fg = color;
+            $self
+        }
+
+        #[inline]
+        pub const fn bg(mut $self: Self, color: Color) -> Self {
+            $style.bg = color;
+            $self
+        }
+
+        #[inline]
+        pub const fn attributes(mut $self: Self, attributes: Attributes) -> Self {
+            $style.attributes = $style.attributes.or(attributes);
+            $self
+        }
+
+        #[inline]
+        pub const fn bold(self) -> Self {
+            self.attributes(Attributes::BOLD)
+        }
+
+        #[inline]
+        pub const fn dim(self) -> Self {
+            self.attributes(Attributes::DIM)
+        }
+
+        #[inline]
+        pub const fn italic(self) -> Self {
+            self.attributes(Attributes::ITALIC)
+        }
+
+        #[inline]
+        pub const fn underlined(self) -> Self {
+            self.attributes(Attributes::UNDERLINED)
+        }
+
+        #[inline]
+        pub const fn blinking(self) -> Self {
+            self.attributes(Attributes::BLINKING)
+        }
+
+        #[inline]
+        pub const fn inverse(self) -> Self {
+            self.attributes(Attributes::INVERSE)
+        }
+
+        #[inline]
+        pub const fn hidden(self) -> Self {
+            self.attributes(Attributes::HIDDEN)
+        }
+    };
+}
+
 #[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Style {
     pub fg: Color,
@@ -15,58 +72,21 @@ impl Style {
         }
     }
 
+    impl_style_builder_methods!(self => self);
+}
+
+pub struct Styled<T> {
+    pub content: T,
+    pub style: Style,
+}
+
+impl<T> Styled<T> {
     #[inline]
-    pub const fn fg(self, color: Color) -> Self {
-        Self { fg: color, ..self }
+    pub const fn new(content: T, style: Style) -> Self {
+        Self { content, style }
     }
 
-    #[inline]
-    pub const fn bg(self, color: Color) -> Self {
-        Self { bg: color, ..self }
-    }
-
-    #[inline]
-    pub const fn attributes(self, attributes: Attributes) -> Self {
-        Self {
-            attributes: self.attributes.or(attributes),
-            ..self
-        }
-    }
-
-    #[inline]
-    pub const fn bold(self) -> Self {
-        self.attributes(Attributes::BOLD)
-    }
-
-    #[inline]
-    pub const fn dim(self) -> Self {
-        self.attributes(Attributes::DIM)
-    }
-
-    #[inline]
-    pub const fn italic(self) -> Self {
-        self.attributes(Attributes::ITALIC)
-    }
-
-    #[inline]
-    pub const fn underlined(self) -> Self {
-        self.attributes(Attributes::UNDERLINED)
-    }
-
-    #[inline]
-    pub const fn blinking(self) -> Self {
-        self.attributes(Attributes::BLINKING)
-    }
-
-    #[inline]
-    pub const fn inverse(self) -> Self {
-        self.attributes(Attributes::INVERSE)
-    }
-
-    #[inline]
-    pub const fn hidden(self) -> Self {
-        self.attributes(Attributes::HIDDEN)
-    }
+    impl_style_builder_methods!(self => self.style);
 }
 
 #[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
