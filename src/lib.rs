@@ -1,9 +1,9 @@
-pub mod color_choice;
-pub mod style;
-
-pub use style::Color;
-
+mod color_choice;
 mod display;
+mod style;
+
+pub use color_choice::*;
+pub use style::*;
 
 mod macros {
     // Imported for doc-comment.
@@ -14,9 +14,9 @@ mod macros {
     #[macro_export]
     macro_rules! styled {
         ($($tt:tt)+) => {
-            $crate::style::Styled::new(
+            $crate::Styled::new(
                 format_args!($($tt)+),
-                $crate::style::Style::new()
+                $crate::Style::new()
             )
         };
     }
