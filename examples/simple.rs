@@ -1,4 +1,4 @@
-use ansi_style_3::{styled, Color};
+use antsy::{styled, Color};
 
 fn main() {
     println!(
