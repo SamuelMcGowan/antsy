@@ -75,6 +75,7 @@ impl Style {
     impl_style_builder_methods!(self => self);
 }
 
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Styled<T> {
     pub content: T,
     pub style: Style,
