@@ -20,67 +20,49 @@ impl fmt::Display for Style {
 
         write!(f, "\x1b[0")?;
 
-        match self.fg {
-            Color::Rgb(r, g, b) => write!(f, ";38;2;{r};{g};{b}")?,
-            Color::Indexed(i) => write!(f, ";38;5;{i}")?,
+        macro_rules! write_colors {
+            ($name:ident = $prefix:literal) => {
+                match self.$name {
+                    Color::Rgb(r, g, b) => write!(f, ";{}8;2;{r};{g};{b}", $prefix)?,
+                    Color::Indexed(i) => write!(f, ";{}8;5;{i}", $prefix)?,
 
-            Color::Default => {}
-            Color::Black => write!(f, ";30")?,
-            Color::Red => write!(f, ";31")?,
-            Color::Green => write!(f, ";32")?,
-            Color::Yellow => write!(f, ";33")?,
-            Color::Blue => write!(f, ";34")?,
-            Color::Magenta => write!(f, ";35")?,
-            Color::Cyan => write!(f, ";36")?,
-            Color::White => write!(f, ";37")?,
+                    Color::Default => {}
+
+                    Color::Black => write!(f, ";{}0", $prefix)?,
+                    Color::Red => write!(f, ";{}1", $prefix)?,
+                    Color::Green => write!(f, ";{}2", $prefix)?,
+                    Color::Yellow => write!(f, ";{}3", $prefix)?,
+                    Color::Blue => write!(f, ";{}4", $prefix)?,
+                    Color::Magenta => write!(f, ";{}5", $prefix)?,
+                    Color::Cyan => write!(f, ";{}6", $prefix)?,
+                    Color::White => write!(f, ";{}7", $prefix)?,
+                }
+            };
         }
 
-        match self.bg {
-            Color::Rgb(r, g, b) => write!(f, ";48;2;{r};{g};{b}")?,
-            Color::Indexed(i) => write!(f, ";48;5;{i}")?,
+        write_colors!(fg = "3");
+        write_colors!(bg = "4");
 
-            Color::Default => {}
-            Color::Black => write!(f, ";40")?,
-            Color::Red => write!(f, ";41")?,
-            Color::Green => write!(f, ";42")?,
-            Color::Yellow => write!(f, ";43")?,
-            Color::Blue => write!(f, ";44")?,
-            Color::Magenta => write!(f, ";45")?,
-            Color::Cyan => write!(f, ";46")?,
-            Color::White => write!(f, ";47")?,
+        macro_rules! write_attributes {
+            ($($name:ident = $ansi:expr),*) => {
+                $(
+                    if self.attributes.contains(Attributes::$name) {
+                        write!(f, ";{}", $ansi)?;
+                    }
+                )*
+            };
         }
 
-        if self.attributes.contains(Attributes::BOLD) {
-            write!(f, ";1")?;
-        }
-
-        if self.attributes.contains(Attributes::DIM) {
-            write!(f, ";2")?;
-        }
-
-        if self.attributes.contains(Attributes::ITALIC) {
-            write!(f, ";3")?;
-        }
-
-        if self.attributes.contains(Attributes::UNDERLINED) {
-            write!(f, ";4")?;
-        }
-
-        if self.attributes.contains(Attributes::BLINKING) {
-            write!(f, ";5")?;
-        }
-
-        if self.attributes.contains(Attributes::INVERSE) {
-            write!(f, ";7")?;
-        }
-
-        if self.attributes.contains(Attributes::HIDDEN) {
-            write!(f, ";8")?;
-        }
-
-        if self.attributes.contains(Attributes::CROSSED) {
-            write!(f, ";9")?;
-        }
+        write_attributes!(
+            BOLD = "1",
+            DIM = "2",
+            ITALIC = "3",
+            UNDERLINED = "4",
+            BLINKING = "5",
+            INVERSE = "7",
+            HIDDEN = "8",
+            CROSSED = "9"
+        );
 
         write!(f, "m")
     }

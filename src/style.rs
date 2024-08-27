@@ -1,3 +1,5 @@
+use std::fmt;
+
 macro_rules! impl_style_builder_methods {
     ($self:ident => $style:expr) => {
         #[inline]
@@ -55,7 +57,7 @@ macro_rules! impl_style_builder_methods {
     };
 }
 
-#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Style {
     pub fg: Color,
     pub bg: Color,
@@ -75,7 +77,7 @@ impl Style {
     impl_style_builder_methods!(self => self);
 }
 
-#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Styled<T> {
     pub content: T,
     pub style: Style,
@@ -90,7 +92,7 @@ impl<T> Styled<T> {
     impl_style_builder_methods!(self => self.style);
 }
 
-#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Color {
     Rgb(u8, u8, u8),
     Indexed(u8),
@@ -106,6 +108,18 @@ pub enum Color {
     Magenta,
     Cyan,
     White,
+}
+
+impl Color {
+    #[inline]
+    pub const fn rgb(r: u8, g: u8, b: u8) -> Self {
+        Self::Rgb(r, g, b)
+    }
+
+    #[inline]
+    pub const fn indexed(i: u8) -> Self {
+        Self::Indexed(i)
+    }
 }
 
 #[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
@@ -141,5 +155,34 @@ impl Attributes {
     #[inline]
     pub const fn not(self) -> Self {
         Self(!self.0)
+    }
+}
+
+impl fmt::Debug for Attributes {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut f = f.debug_set();
+
+        macro_rules! impl_debug {
+            ($($name:ident)*) => {
+                $(
+                    if self.contains(Attributes::$name) {
+                        f.entry(&format_args!("{}", stringify!($name)));
+                    }
+                )*
+            };
+        }
+
+        impl_debug! {
+            BOLD
+            DIM
+            ITALIC
+            UNDERLINED
+            BLINKING
+            INVERSE
+            HIDDEN
+            CROSSED
+        }
+
+        f.finish()
     }
 }

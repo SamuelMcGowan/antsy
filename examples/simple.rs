@@ -1,9 +1,11 @@
 use antsy::{styled, Color};
 
 fn main() {
-    println!(
-        "{}, {}!",
-        styled!("Hello").fg(Color::Red).bold(),
-        styled!("World").italic().inverse(),
-    );
+    let hello = styled!("Hello").fg(Color::Red).bold();
+    let world = styled!("World").fg(Color::Cyan).inverse();
+
+    println!("{hello}, {world}!");
+
+    println!("{:?}", world.to_string());
+    println!("{:?}", world.style);
 }
