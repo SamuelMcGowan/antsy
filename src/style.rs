@@ -185,7 +185,7 @@ impl Color {
     }
 }
 
-/// A set of attributes (bold, italic, etc)..
+/// A set of attributes (bold, italic, etc).
 #[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Attributes(u8);
 
