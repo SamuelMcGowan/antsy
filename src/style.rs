@@ -176,7 +176,7 @@ impl Color {
 
     /// Create an indexed color.
     ///
-    /// See: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+    /// See: <https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit>
     ///
     /// May not be supported by all terminals.
     #[inline]
