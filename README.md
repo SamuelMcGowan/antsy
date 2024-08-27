@@ -21,7 +21,7 @@ use antsy::{styled, Color};
 println!("Making a word {}!", styled!("bold red").fg(Color::Red).bold());
 ```
 
-Supported attributes are:
+Attributes that can be set using [`Styled`]'s methods are:
 
 - [`bold`](Styled::bold)
 - [`dim`](Styled::dim)
@@ -37,19 +37,35 @@ Colors can use the 8-color ANSI palette, 256-color ANSI palette or RGB colors.
 ```rust
 use antsy::{Color, Styled};
 
-fn main() {
-    // 8-color ANSI palette
-    println!("{}", Styled::new("Hello").fg(Color::Red));
-    
-    // 256-color ANSI palette
-    for i in 0..255 {
-        println!("{}", Styled::new(i).fg(Color::indexed(i)));
-    }
+// 8-color ANSI palette
+println!("{}", Styled::new("Hello").fg(Color::Red));
 
-    // RGB colors
-    println!("{}", Styled::new("Hello").fg(Color::rgb(255, 0, 0)));
+// 256-color ANSI palette
+for i in 0..255 {
+    println!("{}", Styled::new(i).fg(Color::indexed(i)));
 }
+
+// RGB colors
+println!("{}", Styled::new("Hello").fg(Color::rgb(255, 0, 0)));
 ```
+
+## Styles
+
+Styles can also be created on their own, allowing them to be reused:
+
+```rust
+use antsy::Style;
+
+const MY_STYLE = Style::new().bold().italic();
+
+println!("{}", MY_STYLE.apply("Hello"));
+```
+
+They have the same set of methods available as [`Styled`].
+
+## Hyperlinks
+
+Use the [`hyperlink`] macro to create hyperlinks. Similar to [`styled`], this supports format arguments and returns an instance of [`Hyperlink`], which has the same methods for styling the text.
 
 ## Nested styled text
 

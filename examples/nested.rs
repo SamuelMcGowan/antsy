@@ -5,7 +5,7 @@ fn main() {
         "{}",
         styled!(
             "the quick {} fox jumps over the lazy dog",
-            styled!("brown").fg(Color::rgb(161, 123, 90))
+            styled!("brown").fg(Color::rgb(161, 123, 90)).hidden()
         )
         .fg(Color::Cyan)
     );

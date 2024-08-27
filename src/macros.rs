@@ -20,6 +20,50 @@ macro_rules! styled {
     };
 }
 
+/// Create a styled value with the given style (see [`Styled`](crate::Styled)).
+///
+/// # Examples
+///
+/// ```rust
+/// use antsy::{apply, Color, Style};
+///
+/// const MY_STYLE: Style = Style::new().fg(Color::Blue).bold();
+/// println!("{}!", apply!(MY_STYLE => "Hello"));
+/// ```
+#[macro_export]
+macro_rules! apply {
+    ($style:expr => $($tt:tt)+) => {
+        $crate::Styled {
+            content: $crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)),
+            style: $style,
+        }
+    };
+}
+
+/// Create a styled hyperlink with the given style and URI (see [`Hyperlink`](crate::Hyperlink)).
+///
+/// # Examples
+///
+/// ```rust
+/// use antsy::{Color, apply_hyperlink};
+///
+/// const MY_STYLE: Style = Style::new().fg(Color::Yellow).italic();
+/// println!(
+///     "{}",
+///     apply_hyperlink!(MY_STYLE => "https://google.com"; "Google")
+/// );
+/// ```
+#[macro_export]
+macro_rules! apply_hyperlink {
+    ($style:expr => $uri:expr; $($tt:tt)+) => {
+        $crate::Hyperlink {
+            uri: $uri,
+            content: $crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)),
+            style: $style,
+        }
+    };
+}
+
 /// Create a styled hyperlink (see [`Hyperlink`](crate::Hyperlink)) to the given URI.
 ///
 /// # Examples

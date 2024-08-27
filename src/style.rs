@@ -5,59 +5,78 @@ use core::{
 
 macro_rules! impl_style_builder_methods {
     ($self:ident => $style:expr) => {
+        /// Set the foreground color.
         #[inline]
         pub const fn fg(mut $self: Self, color: Color) -> Self {
             $style.fg = color;
             $self
         }
 
+        /// Set the background color.
         #[inline]
         pub const fn bg(mut $self: Self, color: Color) -> Self {
             $style.bg = color;
             $self
         }
 
+        /// Set the attributes. See [`Attributes`].
         #[inline]
         pub const fn attributes(mut $self: Self, attributes: Attributes) -> Self {
             $style.attributes = $style.attributes.or(attributes);
             $self
         }
 
+        /// Set the bold attribute.
         #[inline]
         pub const fn bold(self) -> Self {
             self.attributes(Attributes::BOLD)
         }
 
+        /// Set the dim attribute.
         #[inline]
         pub const fn dim(self) -> Self {
             self.attributes(Attributes::DIM)
         }
 
+        /// Set the italic attribute.
         #[inline]
         pub const fn italic(self) -> Self {
             self.attributes(Attributes::ITALIC)
         }
 
+        /// Set the underlined attribute.
         #[inline]
         pub const fn underlined(self) -> Self {
             self.attributes(Attributes::UNDERLINED)
         }
 
+        /// Set the blinking attribute.
+        ///
+        /// Not supported by many terminals.
         #[inline]
         pub const fn blinking(self) -> Self {
             self.attributes(Attributes::BLINKING)
         }
 
+        /// Set the inverted attribute.
+        ///
+        /// Inverts the foreground and background colors.
         #[inline]
         pub const fn inverted(self) -> Self {
             self.attributes(Attributes::INVERTED)
         }
 
+        /// Set the hidden attribute.
+        ///
+        /// Makes the text invisible.
         #[inline]
         pub const fn hidden(self) -> Self {
             self.attributes(Attributes::HIDDEN)
         }
 
+        /// Set the crossed attribute.
+        ///
+        /// Makes the text struck through.
         #[inline]
         pub const fn crossed(self) -> Self {
             self.attributes(Attributes::CROSSED)
@@ -120,19 +139,19 @@ impl<T> Styled<T> {
 /// Can be created using the [`hyperlink!`](crate::hyperlink) macro, which supports
 /// formatting arguments in the hyperlink content, or directly with [`Hyperlink::new`].
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct Hyperlink<T, L> {
-    pub uri: L,
+pub struct Hyperlink<U, T> {
+    pub uri: U,
     pub content: T,
 
     pub style: Style,
 }
 
-impl<T, L> Hyperlink<T, L> {
+impl<U, T> Hyperlink<U, T> {
     /// Create a styled hyperlink with the given content and URI.
     ///
     /// Use [`hyperlink!`](crate::hyperlink) instead if you want to format the hyperlink content.
     #[inline]
-    pub const fn new(uri: L, content: T) -> Self {
+    pub const fn new(uri: U, content: T) -> Self {
         Self {
             uri,
             content,
