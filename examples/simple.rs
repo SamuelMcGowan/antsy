@@ -7,7 +7,7 @@ fn main() {
         styled!("he{}he", styled!("haha")).fg(Color::Blue)
     )
     .fg(Color::Cyan)
-    .inverse();
+    .inverted();
 
     println!("{hello}, {world}!");
 

@@ -85,7 +85,7 @@ impl fmt::Display for Style {
             ITALIC = "3",
             UNDERLINED = "4",
             BLINKING = "5",
-            INVERSE = "7",
+            INVERTED = "7",
             HIDDEN = "8",
             CROSSED = "9"
         );

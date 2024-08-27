@@ -4,7 +4,10 @@ static STYLING_ENABLED: AtomicU8 = AtomicU8::new(0);
 
 /// Set the style mode.
 ///
-/// Returns `true` if styling is now enabled.
+/// Returns `true` if styling was enabled.
+///
+/// By default, the style mode is [`StyleMode::Auto`], so unless the style mode
+/// has been changed, there is no need to call `set_style_mode(StyleMode::Auto)`.
 pub fn set_style_mode(mode: StyleMode) -> bool {
     let enable_styling = mode.should_enable_styling();
     STYLING_ENABLED.store(if enable_styling { 2 } else { 1 }, Ordering::Relaxed);
@@ -24,9 +27,12 @@ pub fn style_enabled() -> bool {
     }
 }
 
+/// Whether to enable or disable styling.
+///
+/// Defaults to `Auto`.
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum StyleMode {
-    /// Auto-detect if styling is supported.
+    /// Auto-detect if styling is supported. See [`StyleMode::auto`] for details.
     #[default]
     Auto,
 
@@ -36,20 +42,25 @@ pub enum StyleMode {
 
 impl StyleMode {
     /// Auto-detect if styling is supported.
+    ///
+    /// Specifically, if the `TERM` environment variable is set to `dumb`
+    /// or `NO_COLOR` is set, then styling is disabled. Otherwise it is enabled.
+    ///
+    /// In non-std environments, this always enables styling.
     #[inline]
     pub const fn auto() -> Self {
         Self::Auto
     }
 
-    /// Force styling on.
+    /// Force-enable styling.
     #[inline]
-    pub const fn always() -> Self {
+    pub const fn enable() -> Self {
         Self::Force(true)
     }
 
-    /// Force styling off.
+    /// Force-disable styling.
     #[inline]
-    pub const fn never() -> Self {
+    pub const fn disable() -> Self {
         Self::Force(false)
     }
 

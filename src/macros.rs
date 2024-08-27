@@ -1,6 +1,6 @@
 use core::fmt;
 
-/// Create a styled value.
+/// Create a styled value (see [`Styled`](crate::Styled)).
 ///
 /// # Examples
 ///
@@ -20,7 +20,7 @@ macro_rules! styled {
     };
 }
 
-/// Create a styled value that will be hyperlinked to the given URI.
+/// Create a styled hyperlink (see [`Hyperlink`](crate::Hyperlink)) to the given URI.
 ///
 /// # Examples
 ///
@@ -37,7 +37,7 @@ macro_rules! styled {
 #[macro_export]
 macro_rules! hyperlink {
     ($uri:expr; $($tt:tt)+) => {
-        $crate::Hyperlink::new($crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)), $uri)
+        $crate::Hyperlink::new($uri, $crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)))
     };
 }
 
