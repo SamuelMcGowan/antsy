@@ -1,16 +1,6 @@
 use std::fmt;
 
-use crate::style::{Attributes, Color, Style, Styled};
-
-impl<T: fmt::Display> fmt::Display for Styled<T> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.style.fmt(f)?;
-        self.content.fmt(f)?;
-
-        // Reset to default style.
-        Style::new().fmt(f)
-    }
-}
+use crate::style::{Attributes, Color, Style};
 
 impl fmt::Display for Style {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

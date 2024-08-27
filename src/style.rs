@@ -1,5 +1,7 @@
 use std::fmt;
 
+use crate::Styled;
+
 macro_rules! impl_style_builder_methods {
     ($self:ident => $style:expr) => {
         #[inline]
@@ -77,18 +79,13 @@ impl Style {
     impl_style_builder_methods!(self => self);
 }
 
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct Styled<T> {
-    pub content: T,
-    pub style: Style,
-}
+// #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+// pub struct Styled<T> {
+//     pub content: T,
+//     pub style: Style,
+// }
 
 impl<T> Styled<T> {
-    #[inline]
-    pub const fn new(content: T, style: Style) -> Self {
-        Self { content, style }
-    }
-
     impl_style_builder_methods!(self => self.style);
 }
 
