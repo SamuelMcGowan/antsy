@@ -6,12 +6,10 @@ A library for conveniently creating styled ANSI text.
 - Hyperlink support
 - [`styled`] and [`hyperlink`] macros for convenient styling of formatted text
 - `const` [`Style`] constructors allows defining styles as constants
-- Support for nested styled text (currently requires `std` feature)
+- Correctly supports nested styled text (currently requires `std` feature)
 - Enable or disable styling globally using the [`set_style_mode`] function
 
-# Examples
-
-## Basic styling
+# Basic styling
 
 Use the [`styled`] macro to create styled text. This supports format arguments and returns an instance of [`Styled`], which has methods for styling the text.
 
@@ -49,25 +47,48 @@ for i in 0..255 {
 println!("{}", Styled::new("Hello").fg(Color::rgb(255, 0, 0)));
 ```
 
-## Styles
+# Hyperlinks
+
+Use the [`hyperlink`] macro to create hyperlinks. Similar to [`styled`], this supports format arguments and returns an instance of [`Hyperlink`], which has the same methods for styling the text.
+
+# Styles
 
 Styles can also be created on their own, allowing them to be reused:
 
 ```rust
-use antsy::Style;
+use antsy::{apply, Style};
 
 const MY_STYLE = Style::new().bold().italic();
 
-println!("{}", MY_STYLE.apply("Hello"));
+println!("{}", apply!(MY_STYLE =>"Hello"));
 ```
 
 They have the same set of methods available as [`Styled`].
 
-## Hyperlinks
+They can also be applied to hyperlinks:
 
-Use the [`hyperlink`] macro to create hyperlinks. Similar to [`styled`], this supports format arguments and returns an instance of [`Hyperlink`], which has the same methods for styling the text.
+```rust
+use antsy::{apply_hyperlink, Style};
 
-## Nested styled text
+const MY_STYLE = Style::new().bold().italic();
+
+println!("{}", apply_hyperlink!(MY_STYLE => "https://rust-lang.org"; "Rust Language"));
+```
+
+# Enabling or disabling styling globally
+
+You can use the [`set_style_mode`] function to enable or disable styling globally. By default, it is auto-detected from the environment (in a non-std environment, it is enabled by default).
+
+```rust
+use antsy::{set_style_mode, StyleMode};
+
+set_style_mode(StyleMode::disable());
+
+// Styling will not be applied
+println!("{}", styled!("Hello").fg(Color::Red));
+```
+
+# Nested styled text
 
 Consider the following case, which prints some text in cyan, with the word "brown" in brown:
 

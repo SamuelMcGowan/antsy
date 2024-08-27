@@ -6,6 +6,6 @@ fn main() {
     println!("{}!", apply!(MY_STYLE => "Hello"));
     println!(
         "{}",
-        apply_hyperlink!(MY_STYLE => "https://google.com"; "Google")
+        apply_hyperlink!(MY_STYLE => "https://rust-lang.org"; "Rust Language")
     );
 }
