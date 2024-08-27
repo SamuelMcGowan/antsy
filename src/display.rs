@@ -37,7 +37,7 @@ impl<T: fmt::Display> fmt::Display for Styled<T> {
 
 impl fmt::Display for Style {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if !crate::color_choice::color_enabled() {
+        if !crate::style_enabled() {
             return Ok(());
         }
 

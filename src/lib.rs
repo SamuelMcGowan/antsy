@@ -3,9 +3,9 @@
 #[doc(hidden)]
 pub mod styled_macro;
 
-mod color_choice;
 mod display;
+mod enable;
 mod style;
 
-pub use color_choice::*;
+pub use enable::*;
 pub use style::*;
