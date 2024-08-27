@@ -1,4 +1,7 @@
-use core::fmt;
+use core::{
+    fmt,
+    ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Not},
+};
 
 macro_rules! impl_style_builder_methods {
     ($self:ident => $style:expr) => {
@@ -268,5 +271,46 @@ impl fmt::Debug for Attributes {
         }
 
         f.finish()
+    }
+}
+
+impl BitOr<Attributes> for Attributes {
+    type Output = Self;
+
+    #[inline]
+    fn bitor(self, rhs: Self) -> Self::Output {
+        Self(self.0 | rhs.0)
+    }
+}
+
+impl BitOrAssign for Attributes {
+    #[inline]
+    fn bitor_assign(&mut self, rhs: Self) {
+        self.0 |= rhs.0;
+    }
+}
+
+impl BitAnd<Attributes> for Attributes {
+    type Output = Self;
+
+    #[inline]
+    fn bitand(self, rhs: Self) -> Self::Output {
+        Self(self.0 & rhs.0)
+    }
+}
+
+impl BitAndAssign for Attributes {
+    #[inline]
+    fn bitand_assign(&mut self, rhs: Self) {
+        self.0 &= rhs.0;
+    }
+}
+
+impl Not for Attributes {
+    type Output = Self;
+
+    #[inline]
+    fn not(self) -> Self::Output {
+        Self(!self.0)
     }
 }
