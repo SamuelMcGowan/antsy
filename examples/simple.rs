@@ -1,4 +1,4 @@
-use antsy::{hyperlinked, styled, Color};
+use antsy::{hyperlink, styled, Color};
 
 fn main() {
     let hello = styled!("Hello").fg(Color::Red).bold();
@@ -18,7 +18,7 @@ fn main() {
 
     println!(
         "{}",
-        hyperlinked!("https://google.com"; "Google")
+        hyperlink!("https://google.com"; "Google")
             .bold()
             .fg(Color::Green)
     );

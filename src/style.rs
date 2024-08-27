@@ -100,14 +100,14 @@ impl<T> Styled<T> {
     impl_style_builder_methods!(self => self.style);
 }
 
-pub struct Hyperlinked<T, L> {
+pub struct Hyperlink<T, L> {
     pub content: T,
     pub uri: L,
 
     pub style: Style,
 }
 
-impl<T, L> Hyperlinked<T, L> {
+impl<T, L> Hyperlink<T, L> {
     #[inline]
     pub const fn new(content: T, uri: L) -> Self {
         Self {

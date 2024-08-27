@@ -16,7 +16,7 @@ use core::fmt;
 #[macro_export]
 macro_rules! styled {
     ($($tt:tt)+) => {
-        $crate::Styled::new($crate::styled_macro::FormatArgsCallback::new(|f| write!(f, $($tt)+)))
+        $crate::Styled::new($crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)))
     };
 }
 
@@ -29,15 +29,15 @@ macro_rules! styled {
 ///
 /// println!(
 ///     "{}",
-///     hyperlinked!("https://google.com"; "Google")
+///     hyperlink!("https://google.com"; "Google")
 ///         .bold()
 ///         .fg(Color::Green)
 /// );
 /// ```
 #[macro_export]
-macro_rules! hyperlinked {
+macro_rules! hyperlink {
     ($uri:expr; $($tt:tt)+) => {
-        $crate::Hyperlinked::new($crate::styled_macro::FormatArgsCallback::new(|f| write!(f, $($tt)+)), $uri)
+        $crate::Hyperlink::new($crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)), $uri)
     };
 }
 

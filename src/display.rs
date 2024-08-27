@@ -2,7 +2,7 @@ use core::fmt;
 
 use crate::{
     style::{Attributes, Color, Style, Styled},
-    Hyperlinked,
+    Hyperlink,
 };
 
 #[cfg(feature = "std")]
@@ -94,7 +94,7 @@ impl fmt::Display for Style {
     }
 }
 
-impl<T: fmt::Display, L: fmt::Display> fmt::Display for Hyperlinked<T, L> {
+impl<T: fmt::Display, L: fmt::Display> fmt::Display for Hyperlink<T, L> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // TODO: disable styling while formatting URI.
         write!(f, "\x1b]8;;{}\x1b\\", self.uri)?;
