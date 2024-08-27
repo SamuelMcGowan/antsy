@@ -1,4 +1,4 @@
-use std::fmt;
+use core::fmt;
 
 macro_rules! impl_style_builder_methods {
     ($self:ident => $style:expr) => {

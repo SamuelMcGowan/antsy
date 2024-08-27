@@ -1,4 +1,4 @@
-use std::sync::atomic::{AtomicU8, Ordering};
+use core::sync::atomic::{AtomicU8, Ordering};
 
 static USE_COLOR: AtomicU8 = AtomicU8::new(0);
 
@@ -55,6 +55,7 @@ impl ColorChoice {
     }
 }
 
+#[cfg(feature = "std")]
 fn env_supports_color() -> bool {
     match std::env::var_os("TERM") {
         Some(s) if s == "dumb" => return false,
@@ -66,5 +67,12 @@ fn env_supports_color() -> bool {
         return false;
     }
 
+    true
+}
+
+#[cfg(not(feature = "std"))]
+fn env_supports_color() -> bool {
+    // If there is no `std` we can presume we should use color since
+    // there is no sign that we should not.
     true
 }

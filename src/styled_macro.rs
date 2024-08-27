@@ -1,4 +1,4 @@
-use std::fmt;
+use core::fmt;
 
 #[macro_export]
 macro_rules! styled {

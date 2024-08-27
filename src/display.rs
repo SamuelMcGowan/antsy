@@ -1,14 +1,18 @@
-use std::cell::Cell;
-use std::fmt;
+use core::fmt;
 
 use crate::style::{Attributes, Color, Style, Styled};
 
+#[cfg(feature = "std")]
+use core::cell::Cell;
+
+#[cfg(feature = "std")]
 thread_local! {
     static RESET_STYLE: Cell<Style> = const { Cell::new(Style::new()) };
 }
 
 impl<T: fmt::Display> fmt::Display for Styled<T> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    #[cfg(feature = "std")]
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let reset_style = RESET_STYLE.get();
 
         RESET_STYLE.set(self.style);
@@ -21,10 +25,18 @@ impl<T: fmt::Display> fmt::Display for Styled<T> {
 
         Ok(())
     }
+
+    #[cfg(not(feature = "std"))]
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        self.style.fmt(f)?;
+        self.content.fmt(f)?;
+        Style::new().fmt(f)?;
+        Ok(())
+    }
 }
 
 impl fmt::Display for Style {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         if !crate::color_choice::color_enabled() {
             return Ok(());
         }
