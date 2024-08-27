@@ -1,9 +1,43 @@
 use core::fmt;
 
+/// Create a styled value.
+///
+/// # Examples
+///
+/// ```rust
+/// use antsy::{Color, styled};
+///
+/// println!(
+///     "{}, {}!",
+///     styled!("Hello").fg(Color::Red).bold(),
+///     styled!("World").fg(Color::Cyan).inverse(),
+/// );
+/// ```
 #[macro_export]
 macro_rules! styled {
     ($($tt:tt)+) => {
         $crate::Styled::new($crate::styled_macro::FormatArgsCallback::new(|f| write!(f, $($tt)+)))
+    };
+}
+
+/// Create a styled value that will be hyperlinked to the given URI.
+///
+/// # Examples
+///
+/// ```rust
+/// use antsy::{Color, hyperlinked};
+///
+/// println!(
+///     "{}",
+///     hyperlinked!("https://google.com"; "Google")
+///         .bold()
+///         .fg(Color::Green)
+/// );
+/// ```
+#[macro_export]
+macro_rules! hyperlinked {
+    ($uri:expr; $($tt:tt)+) => {
+        $crate::Hyperlinked::new($crate::styled_macro::FormatArgsCallback::new(|f| write!(f, $($tt)+)), $uri)
     };
 }
 

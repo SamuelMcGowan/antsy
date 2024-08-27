@@ -1,4 +1,4 @@
-use antsy::{styled, Color};
+use antsy::{hyperlinked, styled, Color};
 
 fn main() {
     let hello = styled!("Hello").fg(Color::Red).bold();
@@ -15,4 +15,11 @@ fn main() {
     println!("{:?}", world.style);
 
     println!("{}", styled!("strikethrough").crossed());
+
+    println!(
+        "{}",
+        hyperlinked!("https://google.com"; "Google")
+            .bold()
+            .fg(Color::Green)
+    );
 }

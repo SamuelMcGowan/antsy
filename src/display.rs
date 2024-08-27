@@ -1,6 +1,9 @@
 use core::fmt;
 
-use crate::style::{Attributes, Color, Style, Styled};
+use crate::{
+    style::{Attributes, Color, Style, Styled},
+    Hyperlinked,
+};
 
 #[cfg(feature = "std")]
 use core::cell::Cell;
@@ -88,5 +91,22 @@ impl fmt::Display for Style {
         );
 
         write!(f, "m")
+    }
+}
+
+impl<T: fmt::Display, L: fmt::Display> fmt::Display for Hyperlinked<T, L> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // TODO: disable styling while formatting URI.
+        write!(f, "\x1b]8;;{}\x1b\\", self.uri)?;
+
+        Styled {
+            content: &self.content,
+            style: self.style,
+        }
+        .fmt(f)?;
+
+        write!(f, "\x1b]8;;\x1b\\")?;
+
+        Ok(())
     }
 }

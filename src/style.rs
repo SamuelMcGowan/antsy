@@ -100,6 +100,26 @@ impl<T> Styled<T> {
     impl_style_builder_methods!(self => self.style);
 }
 
+pub struct Hyperlinked<T, L> {
+    pub content: T,
+    pub uri: L,
+
+    pub style: Style,
+}
+
+impl<T, L> Hyperlinked<T, L> {
+    #[inline]
+    pub const fn new(content: T, uri: L) -> Self {
+        Self {
+            content,
+            uri,
+            style: Style::new(),
+        }
+    }
+
+    impl_style_builder_methods!(self => self.style);
+}
+
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Color {
     Rgb(u8, u8, u8),
