@@ -54,6 +54,11 @@ macro_rules! impl_style_builder_methods {
         pub const fn hidden(self) -> Self {
             self.attributes(Attributes::HIDDEN)
         }
+
+        #[inline]
+        pub const fn crossed(self) -> Self {
+            self.attributes(Attributes::CROSSED)
+        }
     };
 }
 

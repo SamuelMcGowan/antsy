@@ -13,4 +13,6 @@ fn main() {
 
     println!("{:?}", world.to_string());
     println!("{:?}", world.style);
+
+    println!("{}", styled!("strikethrough").crossed());
 }
