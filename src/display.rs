@@ -1,6 +1,27 @@
+use std::cell::Cell;
 use std::fmt;
 
-use crate::style::{Attributes, Color, Style};
+use crate::style::{Attributes, Color, Style, Styled};
+
+thread_local! {
+    static RESET_STYLE: Cell<Style> = const { Cell::new(Style::new()) };
+}
+
+impl<T: fmt::Display> fmt::Display for Styled<T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let reset_style = RESET_STYLE.get();
+
+        RESET_STYLE.set(self.style);
+
+        self.style.fmt(f)?;
+        self.content.fmt(f)?;
+        reset_style.fmt(f)?;
+
+        RESET_STYLE.set(reset_style);
+
+        Ok(())
+    }
+}
 
 impl fmt::Display for Style {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
