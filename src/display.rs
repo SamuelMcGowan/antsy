@@ -14,7 +14,7 @@ thread_local! {
 }
 
 impl<T: fmt::Display> fmt::Display for Styled<T> {
-    #[cfg(feature = "std")]
+    #[cfg(feature = "nested_styles")]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let reset_style = RESET_STYLE.get();
 
@@ -29,7 +29,7 @@ impl<T: fmt::Display> fmt::Display for Styled<T> {
         Ok(())
     }
 
-    #[cfg(not(feature = "std"))]
+    #[cfg(not(feature = "nested_styles"))]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.style.fmt(f)?;
         self.content.fmt(f)?;

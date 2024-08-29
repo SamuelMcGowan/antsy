@@ -60,7 +60,7 @@ use antsy::{apply, Style};
 
 const MY_STYLE = Style::new().bold().italic();
 
-println!("{}", apply!(MY_STYLE =>"Hello"));
+println!("{}", apply!(MY_STYLE => "Hello"));
 ```
 
 They have the same set of methods available as [`Styled`].
@@ -105,4 +105,4 @@ println!(
 );
 ```
 
-Without proper support, this would result in all styling being reset after the word "brown". However with the `std` feature enabled (as it is by default), this is handled correctly, and the remaining text is printed cyan.
+By default, this results in all styling being reset after the word "brown". However, by enabling the `nested` feature (which currently also enables the `std` feature), this is handled correctly, and the remaining text is printed cyan.

@@ -7,4 +7,5 @@ edition = "2021"
 
 [features]
 default = ["std"]
+nested_styles = ["std"]
 std = []
