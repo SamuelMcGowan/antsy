@@ -17,26 +17,12 @@ thread_local! {
 }
 
 impl<T: fmt::Display> fmt::Display for Styled<T> {
-    #[cfg(feature = "nested_styles")]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let reset_style = RESET_STYLE.get();
-
-        RESET_STYLE.set(self.style);
-
-        self.style.fmt(f)?;
-        self.content.fmt(f)?;
-        reset_style.fmt(f)?;
-
-        RESET_STYLE.set(reset_style);
-
-        Ok(())
-    }
-
-    #[cfg(not(feature = "nested_styles"))]
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.style.fmt(f)?;
-        self.content.fmt(f)?;
-        write_reset(f)
+        if crate::style_enabled() {
+            write_styled(f, self.style, &self.content)
+        } else {
+            Ok(())
+        }
     }
 }
 
@@ -46,30 +32,21 @@ impl fmt::Display for Style {
             return Ok(());
         }
 
-        f.write_str("\x1b[0")?;
-
-        write_fg_color(f, self.fg)?;
-        write_bg_color(f, self.bg)?;
-
-        write_attributes(f, self.attributes)?;
-
-        f.write_str("m")
+        write_style(f, *self)
     }
 }
 
 impl<T: fmt::Display, L: fmt::Display> fmt::Display for Hyperlink<T, L> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // TODO: disable styling while formatting URI.
+        if !crate::style_enabled() {
+            return self.content.fmt(f);
+        }
 
         f.write_str("\x1b]8;;")?;
         self.uri.fmt(f)?;
         f.write_str("\x1b\\")?;
 
-        Styled {
-            content: &self.content,
-            style: self.style,
-        }
-        .fmt(f)?;
+        write_styled(f, self.style, &self.content)?;
 
         f.write_str("\x1b]8;;\x1b\\")?;
 
@@ -77,12 +54,40 @@ impl<T: fmt::Display, L: fmt::Display> fmt::Display for Hyperlink<T, L> {
     }
 }
 
-fn write_reset(f: &mut fmt::Formatter) -> fmt::Result {
+#[cfg(not(feature = "nested_styles"))]
+#[inline]
+fn write_styled(f: &mut fmt::Formatter, style: Style, content: &impl fmt::Display) -> fmt::Result {
+    style.fmt(f)?;
+    content.fmt(f)?;
     f.write_str("\x1b[0")
 }
 
-fn write_attributes(f: &mut fmt::Formatter, attributes: Attributes) -> fmt::Result {
-    f.write_str(ATTRIBUTE_LOOKUP[attributes.as_bits() as usize])
+#[cfg(feature = "nested_styles")]
+#[inline]
+fn write_styled(f: &mut fmt::Formatter, style: Style, content: &impl fmt::Display) -> fmt::Result {
+    let reset_style = RESET_STYLE.get();
+
+    RESET_STYLE.set(style);
+
+    style.fmt(f)?;
+    content.fmt(f)?;
+    reset_style.fmt(f)?;
+
+    RESET_STYLE.set(reset_style);
+
+    Ok(())
+}
+
+#[inline]
+fn write_style(f: &mut fmt::Formatter, style: Style) -> fmt::Result {
+    f.write_str("\x1b[0")?;
+
+    write_fg_color(f, style.fg)?;
+    write_bg_color(f, style.bg)?;
+
+    write_attributes(f, style.attributes)?;
+
+    f.write_str("m")
 }
 
 // Separate functions for formatting colors shows performance improvement.
@@ -124,6 +129,10 @@ macro_rules! impl_write_color {
 
 impl_write_color!(write_fg_color 3);
 impl_write_color!(write_bg_color 4);
+
+fn write_attributes(f: &mut fmt::Formatter, attributes: Attributes) -> fmt::Result {
+    f.write_str(ATTRIBUTE_LOOKUP[attributes.as_bits() as usize])
+}
 
 // Since the attributes are only 8 bits, we can use a lookup table.
 const ATTRIBUTE_LOOKUP: [&str; 256] = [
