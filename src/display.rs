@@ -5,10 +5,10 @@ use crate::{
     Hyperlink,
 };
 
-#[cfg(feature = "std")]
+#[cfg(feature = "nested_styles")]
 use core::cell::Cell;
 
-#[cfg(feature = "std")]
+#[cfg(feature = "nested_styles")]
 thread_local! {
     static RESET_STYLE: Cell<Style> = const { Cell::new(Style::new()) };
 }
