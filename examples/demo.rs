@@ -1,12 +1,12 @@
 use antsy::{hyperlink, styled, Color};
 
 fn main() {
-    let hello = styled!("Hello").fg(Color::Red).bold();
+    let hello = styled!("Hello").fg(Color::red()).bold();
     let world = styled!(
         "Wor{}ld",
-        styled!("he{}he", styled!("haha")).fg(Color::Blue)
+        styled!("he{}he", styled!("haha")).fg(Color::blue())
     )
-    .fg(Color::Cyan)
+    .fg(Color::cyan())
     .inverted();
 
     println!("{hello}, {world}!");
@@ -20,6 +20,6 @@ fn main() {
         "{}",
         hyperlink!("https://google.com"; "Google")
             .bold()
-            .fg(Color::Green)
+            .fg(Color::green())
     );
 }

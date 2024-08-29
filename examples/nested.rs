@@ -7,6 +7,6 @@ fn main() {
             "the quick {} fox jumps over the lazy dog",
             styled!("brown").fg(Color::rgb(161, 123, 90))
         )
-        .fg(Color::Cyan)
+        .fg(Color::cyan())
     );
 }

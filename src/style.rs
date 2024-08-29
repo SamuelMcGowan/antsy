@@ -175,15 +175,21 @@ impl<U, T> Hyperlink<U, T> {
 /// may not be supported by all terminals.
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Color {
+    #[default]
+    Default,
+
+    /// An ANSI color.
+    Ansi(AnsiColor),
+
     /// An RGB color.
     Rgb(u8, u8, u8),
 
     /// An indexed color.
     Indexed(u8),
+}
 
-    #[default]
-    Default,
-
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum AnsiColor {
     Black,
     Red,
     Green,
@@ -212,6 +218,30 @@ impl Color {
     pub const fn indexed(i: u8) -> Self {
         Self::Indexed(i)
     }
+}
+
+macro_rules! impl_color_constructors {
+    ($($name:ident $variant:ident,)*) => {
+        impl Color {
+            $(
+                #[inline]
+                pub const fn $name() -> Self {
+                    Self::Ansi(AnsiColor::$variant)
+                }
+            )*
+        }
+    }
+}
+
+impl_color_constructors! {
+    black Black,
+    red Red,
+    green Green,
+    yellow Yellow,
+    blue Blue,
+    magenta Magenta,
+    cyan Cyan,
+    white White,
 }
 
 /// A set of attributes (bold, italic, etc).
@@ -245,6 +275,16 @@ impl Attributes {
 
     /// An attribute set that enables crossed out text. See [`Style::crossed`].
     pub const CROSSED: Self = Self(1 << 7);
+
+    #[inline]
+    pub(crate) const fn from_bits(value: u8) -> Self {
+        Self(value)
+    }
+
+    #[inline]
+    pub(crate) const fn as_bits(&self) -> u8 {
+        self.0
+    }
 
     /// Returns `true` if all attributes enabled in `other` are enabled in `self`.
     #[inline]

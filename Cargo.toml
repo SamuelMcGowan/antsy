@@ -9,3 +9,15 @@ edition = "2021"
 default = ["std"]
 nested_styles = ["std"]
 std = []
+
+# benchmarks
+
+[dev-dependencies]
+criterion = "0.5"
+
+colored = "2.1"
+owo-colors = "4.0"
+
+[[bench]]
+name = "display"
+harness = false
