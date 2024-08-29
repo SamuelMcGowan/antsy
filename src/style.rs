@@ -107,6 +107,13 @@ impl Style {
     }
 
     impl_style_builder_methods!(self => self);
+
+    #[inline]
+    pub const fn is_default(&self) -> bool {
+        matches!(self.fg, Color::Default)
+            && matches!(self.bg, Color::Default)
+            && self.attributes.is_empty()
+    }
 }
 
 /// A styled value.
@@ -243,6 +250,11 @@ impl Attributes {
     #[inline]
     pub const fn contains(&self, other: Self) -> bool {
         (self.0 & other.0) == other.0
+    }
+
+    #[inline]
+    pub const fn is_empty(&self) -> bool {
+        self.0 == 0
     }
 
     /// Return a set of attributes containing all the attributes in `self` OR `other`.

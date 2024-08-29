@@ -33,7 +33,7 @@ impl<T: fmt::Display> fmt::Display for Styled<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.style.fmt(f)?;
         self.content.fmt(f)?;
-        Style::new().fmt(f)?;
+        write_reset(f)?;
         Ok(())
     }
 }
@@ -44,24 +44,35 @@ impl fmt::Display for Style {
             return Ok(());
         }
 
-        write!(f, "\x1b[0")?;
+        f.write_str("\x1b[0")?;
 
         macro_rules! write_colors {
             ($name:ident = $prefix:literal) => {
                 match self.$name {
-                    Color::Rgb(r, g, b) => write!(f, ";{}8;2;{r};{g};{b}", $prefix)?,
-                    Color::Indexed(i) => write!(f, ";{}8;5;{i}", $prefix)?,
+                    Color::Rgb(r, g, b) => {
+                        f.write_str(concat!(";", $prefix, "8;2;"))?;
+                        r.fmt(f)?;
+                        f.write_str(";")?;
+                        g.fmt(f)?;
+                        f.write_str(";")?;
+                        b.fmt(f)?;
+                    }
+
+                    Color::Indexed(i) => {
+                        f.write_str(concat!(";", $prefix, "8;5;"))?;
+                        i.fmt(f)?;
+                    }
 
                     Color::Default => {}
 
-                    Color::Black => write!(f, ";{}0", $prefix)?,
-                    Color::Red => write!(f, ";{}1", $prefix)?,
-                    Color::Green => write!(f, ";{}2", $prefix)?,
-                    Color::Yellow => write!(f, ";{}3", $prefix)?,
-                    Color::Blue => write!(f, ";{}4", $prefix)?,
-                    Color::Magenta => write!(f, ";{}5", $prefix)?,
-                    Color::Cyan => write!(f, ";{}6", $prefix)?,
-                    Color::White => write!(f, ";{}7", $prefix)?,
+                    Color::Black => f.write_str(concat!(";", $prefix, "0"))?,
+                    Color::Red => f.write_str(concat!(";", $prefix, "1"))?,
+                    Color::Green => f.write_str(concat!(";", $prefix, "2"))?,
+                    Color::Yellow => f.write_str(concat!(";", $prefix, "3"))?,
+                    Color::Blue => f.write_str(concat!(";", $prefix, "4"))?,
+                    Color::Magenta => f.write_str(concat!(";", $prefix, "5"))?,
+                    Color::Cyan => f.write_str(concat!(";", $prefix, "6"))?,
+                    Color::White => f.write_str(concat!(";", $prefix, "7"))?,
                 }
             };
         }
@@ -73,7 +84,7 @@ impl fmt::Display for Style {
             ($($name:ident = $ansi:expr),*) => {
                 $(
                     if self.attributes.contains(Attributes::$name) {
-                        write!(f, ";{}", $ansi)?;
+                        f.write_str(concat!(";", $ansi))?;
                     }
                 )*
             };
@@ -97,7 +108,10 @@ impl fmt::Display for Style {
 impl<T: fmt::Display, L: fmt::Display> fmt::Display for Hyperlink<T, L> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // TODO: disable styling while formatting URI.
-        write!(f, "\x1b]8;;{}\x1b\\", self.uri)?;
+
+        f.write_str("\x1b]8;;")?;
+        self.uri.fmt(f)?;
+        f.write_str("\x1b\\")?;
 
         Styled {
             content: &self.content,
@@ -105,8 +119,12 @@ impl<T: fmt::Display, L: fmt::Display> fmt::Display for Hyperlink<T, L> {
         }
         .fmt(f)?;
 
-        write!(f, "\x1b]8;;\x1b\\")?;
+        f.write_str("\x1b]8;;\x1b\\")?;
 
         Ok(())
     }
+}
+
+fn write_reset(f: &mut fmt::Formatter) -> fmt::Result {
+    f.write_str("\x1b[0")
 }
