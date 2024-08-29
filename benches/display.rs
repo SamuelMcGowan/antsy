@@ -98,9 +98,9 @@ fn benchmark(c: &mut Criterion) {
     antsy::set_style_mode(antsy::StyleMode::enable());
 
     c.bench_function("antsy", |b| b.iter(benchmark_antsy));
-    c.bench_function("colored", |b| b.iter(benchmark_colored));
-    c.bench_function("owo-colors", |b| b.iter(benchmark_owo_colors));
-    c.bench_function("yansi", |b| b.iter(benchmark_yansi));
+    // c.bench_function("colored", |b| b.iter(benchmark_colored));
+    // c.bench_function("owo-colors", |b| b.iter(benchmark_owo_colors));
+    // c.bench_function("yansi", |b| b.iter(benchmark_yansi));
 }
 
 fn benchmark_error_message(c: &mut Criterion) {
@@ -108,11 +108,11 @@ fn benchmark_error_message(c: &mut Criterion) {
     antsy::set_style_mode(antsy::StyleMode::enable());
 
     c.bench_function("err_antsy", |b| b.iter(benchmark_antsy_error_message));
-    c.bench_function("err_colored", |b| b.iter(benchmark_colored_error_message));
-    c.bench_function("err_owo-colors", |b| {
-        b.iter(benchmark_owo_colors_error_message)
-    });
-    c.bench_function("err_yansi", |b| b.iter(benchmark_yansi_error_message));
+    // c.bench_function("err_colored", |b| b.iter(benchmark_colored_error_message));
+    // c.bench_function("err_owo-colors", |b| {
+    //     b.iter(benchmark_owo_colors_error_message)
+    // });
+    // c.bench_function("err_yansi", |b| b.iter(benchmark_yansi_error_message));
 }
 
 criterion_group!(benches, benchmark, benchmark_error_message);

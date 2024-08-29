@@ -82,55 +82,30 @@ fn write_reset(f: &mut fmt::Formatter) -> fmt::Result {
 }
 
 fn write_attributes(f: &mut fmt::Formatter, attributes: Attributes) -> fmt::Result {
-    // if attributes.is_empty() {
-    //     return Ok(());
-    // }
-
-    // macro_rules! write_attributes {
-    //     ($($name:ident = $ansi:expr),*) => {
-    //         $(
-    //             if attributes.contains(Attributes::$name) {
-    //                 f.write_str(concat!(";", $ansi))?;
-    //             }
-    //         )*
-    //     };
-    // }
-
-    // write_attributes!(BOLD = "1", DIM = "2", ITALIC = "3", UNDERLINED = "4");
-
-    // const UNCOMMON: Attributes = Attributes::BLINKING
-    //     .or(Attributes::INVERTED)
-    //     .or(Attributes::HIDDEN)
-    //     .or(Attributes::CROSSED);
-
-    // if !attributes.and(UNCOMMON).is_empty() {
-    //     write_attributes!(BLINKING = "5", INVERTED = "7", HIDDEN = "8", CROSSED = "9");
-    // }
-
     f.write_str(ATTRIBUTE_LOOKUP[attributes.as_bits() as usize])
 }
 
 // Separate functions for formatting colors shows performance improvement.
 macro_rules! impl_write_color {
     ($name:ident $prefix:literal) => {
-        #[inline(never)]
+        #[inline]
         fn $name(f: &mut fmt::Formatter, color: Color) -> fmt::Result {
             match color {
                 Color::Default => Ok(()),
 
                 Color::Ansi(color) => match color {
-                    AnsiColor::Black => f.write_str(concat!($prefix, "0")),
-                    AnsiColor::Red => f.write_str(concat!($prefix, "1")),
-                    AnsiColor::Green => f.write_str(concat!($prefix, "2")),
-                    AnsiColor::Yellow => f.write_str(concat!($prefix, "3")),
-                    AnsiColor::Blue => f.write_str(concat!($prefix, "4")),
-                    AnsiColor::Magenta => f.write_str(concat!($prefix, "5")),
-                    AnsiColor::Cyan => f.write_str(concat!($prefix, "6")),
-                    AnsiColor::White => f.write_str(concat!($prefix, "7")),
+                    AnsiColor::Black => f.write_str(concat!(";", $prefix, "0")),
+                    AnsiColor::Red => f.write_str(concat!(";", $prefix, "1")),
+                    AnsiColor::Green => f.write_str(concat!(";", $prefix, "2")),
+                    AnsiColor::Yellow => f.write_str(concat!(";", $prefix, "3")),
+                    AnsiColor::Blue => f.write_str(concat!(";", $prefix, "4")),
+                    AnsiColor::Magenta => f.write_str(concat!(";", $prefix, "5")),
+                    AnsiColor::Cyan => f.write_str(concat!(";", $prefix, "6")),
+                    AnsiColor::White => f.write_str(concat!(";", $prefix, "7")),
                 },
 
                 Color::Rgb(r, g, b) => {
-                    f.write_str(concat!($prefix, "8;2;"))?;
+                    f.write_str(concat!(";", $prefix, "8;2;"))?;
                     r.fmt(f)?;
                     f.write_str(";")?;
                     g.fmt(f)?;
@@ -139,7 +114,7 @@ macro_rules! impl_write_color {
                 }
 
                 Color::Indexed(i) => {
-                    f.write_str(concat!($prefix, "8;5;"))?;
+                    f.write_str(concat!(";", $prefix, "8;5;"))?;
                     i.fmt(f)
                 }
             }
@@ -147,9 +122,10 @@ macro_rules! impl_write_color {
     };
 }
 
-impl_write_color!(write_fg_color ";3");
-impl_write_color!(write_bg_color ";4");
+impl_write_color!(write_fg_color 3);
+impl_write_color!(write_bg_color 4);
 
+// Since the attributes are only 8 bits, we can use a lookup table.
 const ATTRIBUTE_LOOKUP: [&str; 256] = [
     "",
     ";1",
