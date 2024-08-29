@@ -34,7 +34,7 @@ macro_rules! styled {
 macro_rules! apply {
     ($style:expr => $($tt:tt)+) => {
         $crate::Styled {
-            content: $crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)),
+            content: $crate::lazy_format_args!($($tt)+),
             style: $style,
         }
     };
@@ -58,7 +58,7 @@ macro_rules! apply_hyperlink {
     ($style:expr => $uri:expr; $($tt:tt)+) => {
         $crate::Hyperlink {
             uri: $uri,
-            content: $crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)),
+            content: $crate::lazy_format_args!($($tt)+),
             style: $style,
         }
     };
@@ -81,7 +81,14 @@ macro_rules! apply_hyperlink {
 #[macro_export]
 macro_rules! hyperlink {
     ($uri:expr; $($tt:tt)+) => {
-        $crate::Hyperlink::new($uri, $crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+)))
+        $crate::Hyperlink::new($uri, $crate::lazy_format_args!($($tt)+))
+    };
+}
+
+#[macro_export]
+macro_rules! lazy_format_args {
+    ($($tt:tt)+) => {
+        $crate::macros::FormatArgsCallback::new(|f| write!(f, $($tt)+))
     };
 }
 

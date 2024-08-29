@@ -17,6 +17,7 @@ criterion = "0.5"
 
 colored = "2.1"
 owo-colors = "4.0"
+yansi = "1.0.1"
 
 [[bench]]
 name = "display"
