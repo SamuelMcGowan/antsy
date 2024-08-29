@@ -198,6 +198,15 @@ pub enum AnsiColor {
     Magenta,
     Cyan,
     White,
+
+    BrightBlack,
+    BrightRed,
+    BrightGreen,
+    BrightYellow,
+    BrightBlue,
+    BrightMagenta,
+    BrightCyan,
+    BrightWhite,
 }
 
 impl Color {
@@ -242,6 +251,15 @@ impl_color_constructors! {
     magenta Magenta,
     cyan Cyan,
     white White,
+
+    bright_black BrightBlack,
+    bright_red BrightRed,
+    bright_green BrightGreen,
+    bright_yellow BrightYellow,
+    bright_blue BrightBlue,
+    bright_magenta BrightMagenta,
+    bright_cyan BrightCyan,
+    bright_white BrightWhite,
 }
 
 /// A set of attributes (bold, italic, etc).

@@ -92,7 +92,7 @@ fn write_style(f: &mut fmt::Formatter, style: Style) -> fmt::Result {
 
 // Separate functions for formatting colors shows performance improvement.
 macro_rules! impl_write_color {
-    ($name:ident $prefix:literal) => {
+    ($name:ident $prefix:literal $bright_prefix:literal) => {
         #[inline]
         fn $name(f: &mut fmt::Formatter, color: Color) -> fmt::Result {
             match color {
@@ -107,6 +107,15 @@ macro_rules! impl_write_color {
                     AnsiColor::Magenta => f.write_str(concat!(";", $prefix, "5")),
                     AnsiColor::Cyan => f.write_str(concat!(";", $prefix, "6")),
                     AnsiColor::White => f.write_str(concat!(";", $prefix, "7")),
+
+                    AnsiColor::BrightBlack => f.write_str(concat!(";", $bright_prefix, "0")),
+                    AnsiColor::BrightRed => f.write_str(concat!(";", $bright_prefix, "1")),
+                    AnsiColor::BrightGreen => f.write_str(concat!(";", $bright_prefix, "2")),
+                    AnsiColor::BrightYellow => f.write_str(concat!(";", $bright_prefix, "3")),
+                    AnsiColor::BrightBlue => f.write_str(concat!(";", $bright_prefix, "4")),
+                    AnsiColor::BrightMagenta => f.write_str(concat!(";", $bright_prefix, "5")),
+                    AnsiColor::BrightCyan => f.write_str(concat!(";", $bright_prefix, "6")),
+                    AnsiColor::BrightWhite => f.write_str(concat!(";", $bright_prefix, "7")),
                 },
 
                 Color::Rgb(r, g, b) => {
@@ -127,8 +136,8 @@ macro_rules! impl_write_color {
     };
 }
 
-impl_write_color!(write_fg_color 3);
-impl_write_color!(write_bg_color 4);
+impl_write_color!(write_fg_color "3" "9");
+impl_write_color!(write_bg_color "4" "10");
 
 fn write_attributes(f: &mut fmt::Formatter, attributes: Attributes) -> fmt::Result {
     f.write_str(ATTRIBUTE_LOOKUP[attributes.as_bits() as usize])
