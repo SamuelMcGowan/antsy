@@ -277,11 +277,6 @@ impl Attributes {
     pub const CROSSED: Self = Self(1 << 7);
 
     #[inline]
-    pub(crate) const fn from_bits(value: u8) -> Self {
-        Self(value)
-    }
-
-    #[inline]
     pub(crate) const fn as_bits(&self) -> u8 {
         self.0
     }
