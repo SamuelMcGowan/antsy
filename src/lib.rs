@@ -4,12 +4,13 @@
 #[doc(hidden)]
 pub mod macros;
 
-mod display;
-mod enable;
-
 mod color;
 mod style;
 
+mod display;
+mod enable;
+
 pub use color::{AnsiColor, Color};
-pub use enable::*;
-pub use style::*;
+pub use style::{Attributes, Hyperlink, Style, Styled};
+
+pub use enable::{set_style_mode, style_enabled, StyleMode};

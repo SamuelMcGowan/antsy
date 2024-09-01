@@ -107,6 +107,7 @@ impl Style {
 
     impl_style_builder_methods!(self => self);
 
+    /// Check if the style is the default style.
     #[inline]
     pub const fn is_default(&self) -> bool {
         matches!(self.fg, Color::Default)
