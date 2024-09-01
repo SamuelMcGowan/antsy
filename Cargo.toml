@@ -1,6 +1,17 @@
 [package]
 name = "antsy"
 version = "0.1.0"
+
+authors = ["Samuel McGowan"]
+
+description = "A library for conveniently creating styled ANSI text"
+keywords = ["ansi", "color", "terminal", "terminal-colors", "styling"]
+categories = ["command-line-interface", "no-std::no-alloc"]
+
+repository = "https://github.com/SamuelMcGowan/antsy"
+readme = "README.md"
+license = "MPL-2.0"
+
 edition = "2021"
 
 [dependencies]
