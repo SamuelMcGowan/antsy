@@ -25,11 +25,17 @@ fn benchmark_antsy() {
     black_box_fmt(styled);
 }
 
-fn benchmark_colored() {
+fn _benchmark_colored() {
     use colored::Colorize;
 
     let styled = "Hello".bold().red();
     black_box_fmt(styled);
+}
+
+fn benchmark_owo_colors_generic() {
+    use owo_colors::OwoColorize;
+
+    black_box_fmt("Hello".bold().red());
 }
 
 fn benchmark_owo_colors() {
@@ -44,53 +50,58 @@ fn benchmark_yansi() {
     use yansi::Paint;
 
     let styled = "Hello".bold().red();
-    black_box_fmt(Paint::new(styled));
+    black_box_fmt(styled);
 }
 
 fn benchmark_antsy_error_message() {
     use antsy::styled;
 
-    let styled = lazy_format_args!(
+    black_box_fmt(lazy_format_args!(
         "{}: {}",
         styled!("Error").bold().red(),
         styled!("something went wrong").italic()
-    );
-    black_box_fmt(styled)
+    ))
 }
 
-fn benchmark_colored_error_message() {
+fn _benchmark_colored_error_message() {
     use colored::Colorize;
 
-    let styled = lazy_format_args!(
+    black_box_fmt(lazy_format_args!(
         "{}: {}",
         "Error".bold().red(),
         "something went wrong".italic()
-    );
+    ));
+}
 
-    black_box_fmt(styled);
+fn benchmark_owo_colors_error_message_generic() {
+    use owo_colors::OwoColorize;
+
+    black_box_fmt(lazy_format_args!(
+        "{}: {}",
+        "Error".bold().red(),
+        "something went wrong".italic(),
+    ));
 }
 
 fn benchmark_owo_colors_error_message() {
     use owo_colors::OwoColorize;
     use owo_colors::Style;
 
-    let styled = lazy_format_args!(
+    black_box_fmt(lazy_format_args!(
         "{}: {}",
         "Error".style(Style::new().bold().fg::<owo_colors::colors::Red>()),
         "something went wrong".style(Style::new().italic())
-    );
-    black_box_fmt(styled);
+    ));
 }
 
 fn benchmark_yansi_error_message() {
     use yansi::Paint;
 
-    let styled = lazy_format_args!(
+    black_box_fmt(lazy_format_args!(
         "{}: {}",
         "Error".bold().red(),
         "something went wrong".italic()
-    );
-    black_box_fmt(Paint::new(styled));
+    ));
 }
 
 fn benchmark(c: &mut Criterion) {
@@ -99,8 +110,11 @@ fn benchmark(c: &mut Criterion) {
 
     c.bench_function("antsy", |b| b.iter(benchmark_antsy));
     // c.bench_function("colored", |b| b.iter(benchmark_colored));
-    // c.bench_function("owo-colors", |b| b.iter(benchmark_owo_colors));
-    // c.bench_function("yansi", |b| b.iter(benchmark_yansi));
+    c.bench_function("owo-colors-generic", |b| {
+        b.iter(benchmark_owo_colors_generic)
+    });
+    c.bench_function("owo-colors", |b| b.iter(benchmark_owo_colors));
+    c.bench_function("yansi", |b| b.iter(benchmark_yansi));
 }
 
 fn benchmark_error_message(c: &mut Criterion) {
@@ -109,10 +123,13 @@ fn benchmark_error_message(c: &mut Criterion) {
 
     c.bench_function("err_antsy", |b| b.iter(benchmark_antsy_error_message));
     // c.bench_function("err_colored", |b| b.iter(benchmark_colored_error_message));
-    // c.bench_function("err_owo-colors", |b| {
-    //     b.iter(benchmark_owo_colors_error_message)
-    // });
-    // c.bench_function("err_yansi", |b| b.iter(benchmark_yansi_error_message));
+    c.bench_function("err_owo-colors-generic", |b| {
+        b.iter(benchmark_owo_colors_error_message_generic)
+    });
+    c.bench_function("err_owo-colors", |b| {
+        b.iter(benchmark_owo_colors_error_message)
+    });
+    c.bench_function("err_yansi", |b| b.iter(benchmark_yansi_error_message));
 }
 
 criterion_group!(benches, benchmark, benchmark_error_message);
