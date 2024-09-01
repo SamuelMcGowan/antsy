@@ -5,7 +5,7 @@ fn main() {
         "{}",
         styled!(
             "the quick {} fox jumps over the lazy dog",
-            styled!("brown").rgb(161, 123, 90)
+            styled!("brown").color_rgb(161, 123, 90)
         )
         .cyan()
     );

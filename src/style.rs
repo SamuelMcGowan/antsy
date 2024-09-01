@@ -7,20 +7,6 @@ use crate::color::{impl_color_builder_methods, Color};
 
 macro_rules! impl_style_builder_methods {
     ($self:ident => $style:expr) => {
-        // /// Set the foreground color.
-        // #[inline]
-        // pub const fn fg(mut $self: Self, color: Color) -> Self {
-        //     $style.fg = color;
-        //     $self
-        // }
-
-        // /// Set the background color.
-        // #[inline]
-        // pub const fn bg(mut $self: Self, color: Color) -> Self {
-        //     $style.bg = color;
-        //     $self
-        // }
-
         impl_color_builder_methods!($self, color =>
             {
                 $style.fg = color;
