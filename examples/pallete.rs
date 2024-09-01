@@ -1,4 +1,4 @@
-use antsy::Styled;
+use stylic::Styled;
 
 fn main() {
     for i in 0..255 {

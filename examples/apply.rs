@@ -1,4 +1,4 @@
-use antsy::{apply, apply_hyperlink, Style};
+use stylic::{apply, apply_hyperlink, Style};
 
 fn main() {
     const MY_STYLE: Style = Style::new().bold().blue();

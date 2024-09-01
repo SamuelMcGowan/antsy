@@ -17,8 +17,8 @@ fn black_box_fmt(value: impl fmt::Display) {
     let _ = write!(f, "{value}");
 }
 
-fn benchmark_antsy() {
-    use antsy::styled;
+fn benchmark_stylic() {
+    use stylic::styled;
 
     black_box_fmt(styled!("Hello").bold().red());
 }
@@ -48,8 +48,8 @@ fn benchmark_yansi() {
     black_box_fmt("Hello".bold().red());
 }
 
-fn benchmark_antsy_error_message() {
-    use antsy::styled;
+fn benchmark_stylic_error_message() {
+    use stylic::styled;
 
     black_box_fmt(format_args!(
         "{}: {}",
@@ -101,9 +101,9 @@ fn benchmark_yansi_error_message() {
 
 fn benchmark(c: &mut Criterion) {
     colored::control::set_override(true);
-    antsy::set_style_mode(antsy::StyleMode::enable());
+    stylic::set_style_mode(stylic::StyleMode::enable());
 
-    c.bench_function("antsy", |b| b.iter(benchmark_antsy));
+    c.bench_function("stylic", |b| b.iter(benchmark_stylic));
     // c.bench_function("colored", |b| b.iter(benchmark_colored));
     c.bench_function("owo-colors-generic", |b| {
         b.iter(benchmark_owo_colors_generic)
@@ -114,9 +114,9 @@ fn benchmark(c: &mut Criterion) {
 
 fn benchmark_error_message(c: &mut Criterion) {
     colored::control::set_override(true);
-    antsy::set_style_mode(antsy::StyleMode::enable());
+    stylic::set_style_mode(stylic::StyleMode::enable());
 
-    c.bench_function("err_antsy", |b| b.iter(benchmark_antsy_error_message));
+    c.bench_function("err_stylic", |b| b.iter(benchmark_stylic_error_message));
     // c.bench_function("err_colored", |b| b.iter(benchmark_colored_error_message));
     c.bench_function("err_owo-colors-generic", |b| {
         b.iter(benchmark_owo_colors_error_message_generic)

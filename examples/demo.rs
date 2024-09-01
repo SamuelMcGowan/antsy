@@ -1,4 +1,4 @@
-use antsy::{hyperlink, styled};
+use stylic::{hyperlink, styled};
 
 fn main() {
     let hello = styled!("Hello").bold().red().on_blue();

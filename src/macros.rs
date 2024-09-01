@@ -5,7 +5,7 @@ use core::fmt;
 /// # Examples
 ///
 /// ```rust
-/// use antsy::{Color, styled};
+/// use stylic::{Color, styled};
 ///
 /// println!(
 ///     "{}, {}!",
@@ -25,7 +25,7 @@ macro_rules! styled {
 /// # Examples
 ///
 /// ```rust
-/// use antsy::{apply, Color, Style};
+/// use stylic::{apply, Color, Style};
 ///
 /// const MY_STYLE: Style = Style::new().blue().bold();
 /// println!("{}!", apply!(MY_STYLE => "Hello"));
@@ -45,7 +45,7 @@ macro_rules! apply {
 /// # Examples
 ///
 /// ```rust
-/// use antsy::{apply_hyperlink, Color, Style};
+/// use stylic::{apply_hyperlink, Color, Style};
 ///
 /// const MY_STYLE: Style = Style::new().yellow().italic();
 /// println!(
@@ -69,7 +69,7 @@ macro_rules! apply_hyperlink {
 /// # Examples
 ///
 /// ```rust
-/// use antsy::{Color, hyperlink};
+/// use stylic::{Color, hyperlink};
 ///
 /// println!(
 ///     "{}",

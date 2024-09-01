@@ -1,4 +1,4 @@
-use antsy::styled;
+use stylic::styled;
 
 fn main() {
     println!(
