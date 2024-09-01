@@ -9,8 +9,8 @@ use core::fmt;
 ///
 /// println!(
 ///     "{}, {}!",
-///     styled!("Hello").fg(Color::Red).bold(),
-///     styled!("World").fg(Color::Cyan).inverse(),
+///     styled!("Hello").red().bold(),
+///     styled!("World").cyan().inverted(),
 /// );
 /// ```
 #[macro_export]
@@ -27,7 +27,7 @@ macro_rules! styled {
 /// ```rust
 /// use antsy::{apply, Color, Style};
 ///
-/// const MY_STYLE: Style = Style::new().fg(Color::Blue).bold();
+/// const MY_STYLE: Style = Style::new().blue().bold();
 /// println!("{}!", apply!(MY_STYLE => "Hello"));
 /// ```
 #[macro_export]
@@ -45,9 +45,9 @@ macro_rules! apply {
 /// # Examples
 ///
 /// ```rust
-/// use antsy::{Color, apply_hyperlink};
+/// use antsy::{apply_hyperlink, Color, Style};
 ///
-/// const MY_STYLE: Style = Style::new().fg(Color::Yellow).italic();
+/// const MY_STYLE: Style = Style::new().yellow().italic();
 /// println!(
 ///     "{}",
 ///     apply_hyperlink!(MY_STYLE => "https://google.com"; "Google")
@@ -69,13 +69,13 @@ macro_rules! apply_hyperlink {
 /// # Examples
 ///
 /// ```rust
-/// use antsy::{Color, hyperlinked};
+/// use antsy::{Color, hyperlink};
 ///
 /// println!(
 ///     "{}",
 ///     hyperlink!("https://google.com"; "Google")
 ///         .bold()
-///         .fg(Color::Green)
+///         .green()
 /// );
 /// ```
 #[macro_export]

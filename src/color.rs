@@ -143,6 +143,18 @@ macro_rules! impl_color_builder_methods {
         fg($($(#[$fg_meta:meta])* $fg_name:ident)*)
         bg($($(#[$bg_meta:meta])* $bg_name:ident)*)
     ) => {
+        /// Set the foreground color.
+        #[inline]
+        pub const fn fg(mut $self: Self, $color: $crate::Color) -> Self {
+            $output_fg
+        }
+
+        /// Set the background color.
+        #[inline]
+        pub const fn bg(mut $self: Self, $color: $crate::Color) -> Self {
+            $output_bg
+        }
+
         /// Set the foreground color to an RGB color.
         #[inline]
         pub const fn rgb_color(mut $self: Self, r: u8, g: u8, b: u8) -> Self {

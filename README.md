@@ -41,7 +41,7 @@ println!("{}", Styled::new("Hello").red());
 
 // 256-color ANSI palette
 for i in 0..255 {
-    println!("{}", Styled::new(i).ansi256_color(i)););
+    println!("{}", Styled::new(i).ansi256_color(i));
 }
 
 // RGB colors
@@ -59,7 +59,7 @@ Styles can also be created on their own, allowing them to be reused:
 ```rust
 use antsy::{apply, Style};
 
-const MY_STYLE = Style::new().bold().italic();
+const MY_STYLE: Style = Style::new().bold().italic();
 
 println!("{}", apply!(MY_STYLE => "Hello"));
 ```
@@ -71,7 +71,7 @@ They can also be applied to hyperlinks:
 ```rust
 use antsy::{apply_hyperlink, Style};
 
-const MY_STYLE = Style::new().bold().italic();
+const MY_STYLE: Style = Style::new().bold().italic();
 
 println!("{}", apply_hyperlink!(MY_STYLE => "https://rust-lang.org"; "Rust Language"));
 ```
@@ -81,7 +81,7 @@ println!("{}", apply_hyperlink!(MY_STYLE => "https://rust-lang.org"; "Rust Langu
 You can use the [`set_style_mode`] function to enable or disable styling globally. By default, it is auto-detected from the environment (in a non-std environment, it is enabled by default).
 
 ```rust
-use antsy::{set_style_mode, StyleMode};
+use antsy::{set_style_mode, styled, StyleMode};
 
 set_style_mode(StyleMode::disable());
 
