@@ -85,6 +85,10 @@ macro_rules! hyperlink {
     };
 }
 
+/// Like [`format_args`], but evaluates the format expression whenever [`Display::fmt`](fmt::Display::fmt) is called,
+/// rather than returning a [`fmt::Arguments`] directly.
+///
+/// This avoids lifetime issues caused by temporary lifetimes. See <https://github.com/rust-lang/rust/issues/92698>.
 #[macro_export]
 macro_rules! lazy_format_args {
     ($($tt:tt)+) => {
@@ -92,8 +96,7 @@ macro_rules! lazy_format_args {
     };
 }
 
-// We use a callback to avoid storing a `fmt::Arguments`, since `fmt::Arguments` causes lifetime issues
-// due to being (?) a temporary value.
+/// See [`lazy_format_args`].
 pub struct FormatArgsCallback<F>(F);
 
 impl<F: Fn(&mut fmt::Formatter) -> fmt::Result> FormatArgsCallback<F> {
