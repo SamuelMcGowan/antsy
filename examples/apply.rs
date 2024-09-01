@@ -1,7 +1,7 @@
 use antsy::{apply, apply_hyperlink, Style};
 
 fn main() {
-    const MY_STYLE: Style = Style::new().blue().bold();
+    const MY_STYLE: Style = Style::new().bold().blue();
 
     println!("{}!", apply!(MY_STYLE => "Hello"));
     println!(
