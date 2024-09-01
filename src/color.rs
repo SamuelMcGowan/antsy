@@ -1,5 +1,5 @@
 /// A color.
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Color {
     /// The default color.
     #[default]
@@ -16,7 +16,8 @@ pub enum Color {
 }
 
 /// An ANSI 4-bit color.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[allow(missing_docs)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum AnsiColor {
     Black,
     Red,
@@ -35,59 +36,6 @@ pub enum AnsiColor {
     BrightMagenta,
     BrightCyan,
     BrightWhite,
-}
-
-impl Color {
-    /// Create an RGB color.
-    #[inline]
-    pub const fn rgb(r: u8, g: u8, b: u8) -> Self {
-        Self::Rgb(r, g, b)
-    }
-
-    /// Create an ANSI 4-bit color.
-    #[inline]
-    pub const fn ansi(color: AnsiColor) -> Self {
-        Self::Ansi(color)
-    }
-
-    /// Create an ANSI 8-bit color.
-    #[inline]
-    pub const fn ansi256(i: u8) -> Self {
-        Self::Ansi256(i)
-    }
-}
-
-macro_rules! impl_color_constructors {
-    ($($name:ident $variant:ident,)*) => {
-        $(
-            #[inline]
-            pub const fn $name() -> Self {
-                Self::Ansi(AnsiColor::$variant)
-            }
-        )*
-    };
-}
-
-impl Color {
-    impl_color_constructors! {
-        black Black,
-        red Red,
-        green Green,
-        yellow Yellow,
-        blue Blue,
-        magenta Magenta,
-        cyan Cyan,
-        white White,
-
-        bright_black BrightBlack,
-        bright_red BrightRed,
-        bright_green BrightGreen,
-        bright_yellow BrightYellow,
-        bright_blue BrightBlue,
-        bright_magenta BrightMagenta,
-        bright_cyan BrightCyan,
-        bright_white BrightWhite,
-    }
 }
 
 macro_rules! impl_color_builder_methods {
@@ -197,21 +145,21 @@ macro_rules! impl_color_builder_methods {
     ) => {
         /// Set the foreground color to an RGB color.
         #[inline]
-        pub const fn color_rgb(mut $self: Self, r: u8, g: u8, b: u8) -> Self {
+        pub const fn rgb_color(mut $self: Self, r: u8, g: u8, b: u8) -> Self {
             let $color = $crate::Color::Rgb(r, g, b);
             $output_fg
         }
 
         /// Set the foreground color to an ANSI 4-bit color.
         #[inline]
-        pub const fn color_ansi(mut $self: Self, color: $crate::AnsiColor) -> Self {
+        pub const fn ansi_color(mut $self: Self, color: $crate::AnsiColor) -> Self {
             let $color = $crate::Color::Ansi(color);
             $output_fg
         }
 
         /// Set the foreground color to an ANSI 8-bit color.
         #[inline]
-        pub const fn color_ansi256(mut $self: Self, i: u8) -> Self {
+        pub const fn ansi256_color(mut $self: Self, i: u8) -> Self {
             let $color = $crate::Color::Ansi256(i);
             $output_fg
         }

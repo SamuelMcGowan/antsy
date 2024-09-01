@@ -16,7 +16,7 @@ thread_local! {
 
 impl<T: fmt::Display> fmt::Display for Styled<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if crate::style_enabled() {
+        if crate::is_style_enabled() {
             write_styled(f, self.style, &self.content)
         } else {
             Ok(())
@@ -26,7 +26,7 @@ impl<T: fmt::Display> fmt::Display for Styled<T> {
 
 impl fmt::Display for Style {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if !crate::style_enabled() {
+        if !crate::is_style_enabled() {
             return Ok(());
         }
 
@@ -36,7 +36,7 @@ impl fmt::Display for Style {
 
 impl<T: fmt::Display, L: fmt::Display> fmt::Display for Hyperlink<T, L> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if !crate::style_enabled() {
+        if !crate::is_style_enabled() {
             return self.content.fmt(f);
         }
 
@@ -138,7 +138,7 @@ impl_write_color!(write_fg_color "3" "9");
 impl_write_color!(write_bg_color "4" "10");
 
 fn write_attributes(f: &mut fmt::Formatter, attributes: Attributes) -> fmt::Result {
-    f.write_str(ATTRIBUTE_LOOKUP[attributes.as_bits() as usize])
+    f.write_str(ATTRIBUTE_LOOKUP[attributes.into_bits() as usize])
 }
 
 // Since the attributes are only 8 bits, we can use a lookup table.

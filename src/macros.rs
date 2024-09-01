@@ -97,6 +97,7 @@ macro_rules! lazy_format_args {
 }
 
 /// See [`lazy_format_args`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FormatArgsCallback<F>(F);
 
 impl<F: Fn(&mut fmt::Formatter) -> fmt::Result> FormatArgsCallback<F> {

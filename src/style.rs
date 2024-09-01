@@ -88,14 +88,20 @@ macro_rules! impl_style_builder_methods {
 /// Styles can be written directly (since they implement [`fmt::Display`]) or
 /// using a `Styled` value, which can be conveniently created using the
 /// [`styled!`](crate::styled) macro.
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Style {
+    /// Foreground color.
     pub fg: Color,
+
+    /// Background color.
     pub bg: Color,
+
+    /// Attributes (for example, bold, italic, strikethrough).
     pub attributes: Attributes,
 }
 
 impl Style {
+    /// Create a new, default style.
     #[inline]
     pub const fn new() -> Self {
         Self {
@@ -116,11 +122,19 @@ impl Style {
     }
 }
 
+impl From<Attributes> for Style {
+    #[inline]
+    fn from(attributes: Attributes) -> Self {
+        Self::new().attributes(attributes)
+    }
+}
+
 /// A styled value.
 ///
 /// Can be created using the [`styled!`](crate::styled) macro, which supports
 /// formatting arguments, or directly with [`Styled::new`].
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[allow(missing_docs)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Styled<T> {
     pub content: T,
     pub style: Style,
@@ -138,6 +152,13 @@ impl<T> Styled<T> {
         }
     }
 
+    /// Set the style.
+    #[inline]
+    pub const fn style(mut self, style: Style) -> Self {
+        self.style = style;
+        self
+    }
+
     impl_style_builder_methods!(self => self.style);
 }
 
@@ -145,7 +166,8 @@ impl<T> Styled<T> {
 ///
 /// Can be created using the [`hyperlink!`](crate::hyperlink) macro, which supports
 /// formatting arguments in the hyperlink content, or directly with [`Hyperlink::new`].
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[allow(missing_docs)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Hyperlink<U, T> {
     pub uri: U,
     pub content: T,
@@ -166,11 +188,18 @@ impl<U, T> Hyperlink<U, T> {
         }
     }
 
+    /// Set the style.
+    #[inline]
+    pub const fn style(mut self, style: Style) -> Self {
+        self.style = style;
+        self
+    }
+
     impl_style_builder_methods!(self => self.style);
 }
 
 /// A set of attributes (bold, italic, etc).
-#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Attributes(u8);
 
 impl Attributes {
@@ -202,7 +231,7 @@ impl Attributes {
     pub const CROSSED: Self = Self(1 << 7);
 
     #[inline]
-    pub(crate) const fn as_bits(&self) -> u8 {
+    pub(crate) const fn into_bits(self) -> u8 {
         self.0
     }
 
@@ -212,6 +241,7 @@ impl Attributes {
         (self.0 & other.0) == other.0
     }
 
+    /// Returns `true` if no attributes are enabled.
     #[inline]
     pub const fn is_empty(&self) -> bool {
         self.0 == 0
@@ -303,5 +333,12 @@ impl Not for Attributes {
     #[inline]
     fn not(self) -> Self::Output {
         Self(!self.0)
+    }
+}
+
+impl From<Attributes> for u8 {
+    #[inline]
+    fn from(value: Attributes) -> Self {
+        value.0
     }
 }

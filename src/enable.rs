@@ -15,7 +15,7 @@ pub fn set_style_mode(mode: StyleMode) -> bool {
 }
 
 /// Returns `true` if styling is enabled.
-pub fn style_enabled() -> bool {
+pub fn is_style_enabled() -> bool {
     match STYLING_ENABLED.load(Ordering::Relaxed) {
         // lazy initialization
         0 => set_style_mode(StyleMode::Auto),
@@ -30,7 +30,7 @@ pub fn style_enabled() -> bool {
 /// Whether to enable or disable styling.
 ///
 /// Defaults to `Auto`.
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum StyleMode {
     /// Auto-detect if styling is supported. See [`StyleMode::auto`] for details.
     #[default]
