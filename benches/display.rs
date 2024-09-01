@@ -1,4 +1,3 @@
-use antsy::lazy_format_args;
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::fmt::{self, Write};
 use std::hint::black_box;
@@ -21,15 +20,13 @@ fn black_box_fmt(value: impl fmt::Display) {
 fn benchmark_antsy() {
     use antsy::styled;
 
-    let styled = styled!("Hello").bold().red();
-    black_box_fmt(styled);
+    black_box_fmt(styled!("Hello").bold().red());
 }
 
 fn _benchmark_colored() {
     use colored::Colorize;
 
-    let styled = "Hello".bold().red();
-    black_box_fmt(styled);
+    black_box_fmt("Hello".bold().red());
 }
 
 fn benchmark_owo_colors_generic() {
@@ -42,21 +39,19 @@ fn benchmark_owo_colors() {
     use owo_colors::OwoColorize;
     use owo_colors::Style;
 
-    let styled = "Hello".style(Style::new().bold().fg::<owo_colors::colors::Red>());
-    black_box_fmt(styled);
+    black_box_fmt("Hello".style(Style::new().bold().red()));
 }
 
 fn benchmark_yansi() {
     use yansi::Paint;
 
-    let styled = "Hello".bold().red();
-    black_box_fmt(styled);
+    black_box_fmt("Hello".bold().red());
 }
 
 fn benchmark_antsy_error_message() {
     use antsy::styled;
 
-    black_box_fmt(lazy_format_args!(
+    black_box_fmt(format_args!(
         "{}: {}",
         styled!("Error").bold().red(),
         styled!("something went wrong").italic()
@@ -66,7 +61,7 @@ fn benchmark_antsy_error_message() {
 fn _benchmark_colored_error_message() {
     use colored::Colorize;
 
-    black_box_fmt(lazy_format_args!(
+    black_box_fmt(format_args!(
         "{}: {}",
         "Error".bold().red(),
         "something went wrong".italic()
@@ -76,7 +71,7 @@ fn _benchmark_colored_error_message() {
 fn benchmark_owo_colors_error_message_generic() {
     use owo_colors::OwoColorize;
 
-    black_box_fmt(lazy_format_args!(
+    black_box_fmt(format_args!(
         "{}: {}",
         "Error".bold().red(),
         "something went wrong".italic(),
@@ -87,9 +82,9 @@ fn benchmark_owo_colors_error_message() {
     use owo_colors::OwoColorize;
     use owo_colors::Style;
 
-    black_box_fmt(lazy_format_args!(
+    black_box_fmt(format_args!(
         "{}: {}",
-        "Error".style(Style::new().bold().fg::<owo_colors::colors::Red>()),
+        "Error".style(Style::new().bold().red()),
         "something went wrong".style(Style::new().italic())
     ));
 }
@@ -97,7 +92,7 @@ fn benchmark_owo_colors_error_message() {
 fn benchmark_yansi_error_message() {
     use yansi::Paint;
 
-    black_box_fmt(lazy_format_args!(
+    black_box_fmt(format_args!(
         "{}: {}",
         "Error".bold().red(),
         "something went wrong".italic()
