@@ -1,6 +1,6 @@
-use antsy::{styled, Color};
+use antsy::styled;
 
 fn main() {
-    println!("{}", styled!("normal").fg(Color::green()).bold());
-    println!("{}", styled!("bright").fg(Color::bright_green()).bold());
+    println!("{}", styled!("normal").green().bold());
+    println!("{}", styled!("bright").bright_green().bold());
 }

@@ -3,10 +3,8 @@ use core::{
     str,
 };
 
-use crate::{
-    style::{Attributes, Color, Style, Styled},
-    AnsiColor, Hyperlink,
-};
+use crate::style::{Attributes, Style, Styled};
+use crate::{AnsiColor, Color, Hyperlink};
 
 #[cfg(feature = "nested_styles")]
 use core::cell::Cell;
@@ -118,6 +116,11 @@ macro_rules! impl_write_color {
                     AnsiColor::BrightWhite => f.write_str(concat!(";", $bright_prefix, "7")),
                 },
 
+                Color::Ansi256(i) => {
+                    f.write_str(concat!(";", $prefix, "8;5;"))?;
+                    i.fmt(f)
+                }
+
                 Color::Rgb(r, g, b) => {
                     f.write_str(concat!(";", $prefix, "8;2;"))?;
                     r.fmt(f)?;
@@ -125,11 +128,6 @@ macro_rules! impl_write_color {
                     g.fmt(f)?;
                     f.write_str(";")?;
                     b.fmt(f)
-                }
-
-                Color::Indexed(i) => {
-                    f.write_str(concat!(";", $prefix, "8;5;"))?;
-                    i.fmt(f)
                 }
             }
         }

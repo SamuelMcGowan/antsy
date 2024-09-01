@@ -3,21 +3,34 @@ use core::{
     ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, Not},
 };
 
+use crate::color::{impl_color_builder_methods, Color};
+
 macro_rules! impl_style_builder_methods {
     ($self:ident => $style:expr) => {
-        /// Set the foreground color.
-        #[inline]
-        pub const fn fg(mut $self: Self, color: Color) -> Self {
-            $style.fg = color;
-            $self
-        }
+        // /// Set the foreground color.
+        // #[inline]
+        // pub const fn fg(mut $self: Self, color: Color) -> Self {
+        //     $style.fg = color;
+        //     $self
+        // }
 
-        /// Set the background color.
-        #[inline]
-        pub const fn bg(mut $self: Self, color: Color) -> Self {
-            $style.bg = color;
-            $self
-        }
+        // /// Set the background color.
+        // #[inline]
+        // pub const fn bg(mut $self: Self, color: Color) -> Self {
+        //     $style.bg = color;
+        //     $self
+        // }
+
+        impl_color_builder_methods!($self, color =>
+            {
+                $style.fg = color;
+                $self
+            },
+            {
+                $style.bg = color;
+                $self
+            }
+        );
 
         /// Set the attributes. See [`Attributes`].
         #[inline]
@@ -167,99 +180,6 @@ impl<U, T> Hyperlink<U, T> {
     }
 
     impl_style_builder_methods!(self => self.style);
-}
-
-/// A color.
-///
-/// RGB and [indexed colors](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit)
-/// may not be supported by all terminals.
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum Color {
-    #[default]
-    Default,
-
-    /// An ANSI color.
-    Ansi(AnsiColor),
-
-    /// An RGB color.
-    Rgb(u8, u8, u8),
-
-    /// An indexed color.
-    Indexed(u8),
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum AnsiColor {
-    Black,
-    Red,
-    Green,
-    Yellow,
-    Blue,
-    Magenta,
-    Cyan,
-    White,
-
-    BrightBlack,
-    BrightRed,
-    BrightGreen,
-    BrightYellow,
-    BrightBlue,
-    BrightMagenta,
-    BrightCyan,
-    BrightWhite,
-}
-
-impl Color {
-    /// Create an RGB color.
-    ///
-    /// May not be supported by all terminals.
-    #[inline]
-    pub const fn rgb(r: u8, g: u8, b: u8) -> Self {
-        Self::Rgb(r, g, b)
-    }
-
-    /// Create an indexed color.
-    ///
-    /// See: <https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit>
-    ///
-    /// May not be supported by all terminals.
-    #[inline]
-    pub const fn indexed(i: u8) -> Self {
-        Self::Indexed(i)
-    }
-}
-
-macro_rules! impl_color_constructors {
-    ($($name:ident $variant:ident,)*) => {
-        impl Color {
-            $(
-                #[inline]
-                pub const fn $name() -> Self {
-                    Self::Ansi(AnsiColor::$variant)
-                }
-            )*
-        }
-    }
-}
-
-impl_color_constructors! {
-    black Black,
-    red Red,
-    green Green,
-    yellow Yellow,
-    blue Blue,
-    magenta Magenta,
-    cyan Cyan,
-    white White,
-
-    bright_black BrightBlack,
-    bright_red BrightRed,
-    bright_green BrightGreen,
-    bright_yellow BrightYellow,
-    bright_blue BrightBlue,
-    bright_magenta BrightMagenta,
-    bright_cyan BrightCyan,
-    bright_white BrightWhite,
 }
 
 /// A set of attributes (bold, italic, etc).

@@ -6,7 +6,10 @@ pub mod macros;
 
 mod display;
 mod enable;
+
+mod color;
 mod style;
 
+pub use color::{AnsiColor, Color};
 pub use enable::*;
 pub use style::*;

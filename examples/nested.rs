@@ -1,12 +1,12 @@
-use antsy::{styled, Color};
+use antsy::styled;
 
 fn main() {
     println!(
         "{}",
         styled!(
             "the quick {} fox jumps over the lazy dog",
-            styled!("brown").fg(Color::rgb(161, 123, 90))
+            styled!("brown").rgb(161, 123, 90)
         )
-        .fg(Color::cyan())
+        .cyan()
     );
 }

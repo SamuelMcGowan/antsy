@@ -19,9 +19,9 @@ fn black_box_fmt(value: impl fmt::Display) {
 }
 
 fn benchmark_antsy() {
-    use antsy::{styled, Color};
+    use antsy::styled;
 
-    let styled = styled!("Hello").bold().fg(Color::red());
+    let styled = styled!("Hello").bold().red();
     black_box_fmt(styled);
 }
 
@@ -48,11 +48,11 @@ fn benchmark_yansi() {
 }
 
 fn benchmark_antsy_error_message() {
-    use antsy::{styled, Color};
+    use antsy::styled;
 
     let styled = lazy_format_args!(
         "{}: {}",
-        styled!("Error").bold().fg(Color::red()),
+        styled!("Error").bold().red(),
         styled!("something went wrong").italic()
     );
     black_box_fmt(styled)
